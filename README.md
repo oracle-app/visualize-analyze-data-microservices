@@ -1,4 +1,4 @@
-# Chart Generator Microservice
+# Chart Generator Microservice 1.1.0
 
 A Flask microservice that analyzes your `.csv` or `.xlsx` files using a local LLM and returns chart suggestions as JSON that runs locally. 
 
@@ -109,7 +109,8 @@ Value: your_file.csv
 | Scatter | Two fields to compare |
 | Area | Default |
 
-**Available filters:** `Max`, `Min`, `Avg`, `Sum`
+**Available filters:** `Max`, `Min`, `Avg`, `Sum`, `Count`
+If there is no filter, asume it is Count. 
 
 ---
 

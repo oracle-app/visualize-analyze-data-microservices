@@ -20,9 +20,8 @@ def prepareData(df, filename):
         if pd.api.types.is_numeric_dtype(df[col]):
             mins = df[col].min()
             maxs = df[col].max()
-            q3 = df[col].quantile(q=.25)
-            q2 = df[col].quantile(q=.5)
-            q1 = df[col].quantile(q=.75)
+            quantiles = df[col].quantile([0.25, 0.5, 0.75])
+            q1, q2, q3 = quantiles[0.25], quantiles[0.5], quantiles[0.75]
         else: 
             mins = "N/A"
             maxs = "N/A"
@@ -30,7 +29,7 @@ def prepareData(df, filename):
             q2 = "N/A"
             q1 = "N/A"
         stats.append({"nameCol": col, "min" : mins, "max" : maxs,"q3": q3,"q2": q2, "q1":q1})
-    filterCols = [col for col in df.columns if corrMatrixFilter(df[col], df)]
+    filterCols = [col for col in df.columns if corrMatrixFilter(df[col], df) and not pd.api.types.is_bool_dtype(df[col])]
     corr_matrix = df[filterCols].corr()
     samples = df.sample(25)
 
@@ -42,7 +41,7 @@ def prepareData(df, filename):
     Column names: 
     ##Data distributions
     min: 
-    max, q3, q2 ,q1
+    max, q1, q2 ,q3
     {stats}
     ##Correlations between data
     corr_matrix: {corr_matrix}
@@ -60,7 +59,7 @@ def prepareData(df, filename):
 def corrMatrixFilter(series, df): 
     if not pd.api.types.is_numeric_dtype(series): 
         return False
-    if series.nunique == len(df): 
+    if series.nunique() == len(df): 
         return False
     nameLowerCase = series.name.lower()
     #Modify and append more names of cols to filter if they mean nothing
@@ -79,13 +78,13 @@ def prepareInsightsData(df, insights):
     {
         "Charts": [
             {
-                "ChartName": "Sales by Region",
+                "chartName": "Sales by Region",
                 "chartType": "Vertical Bar Chart"
                 "metrics": { "field1": "region", "field2": "sales" },
                 "metricsFilter": {"sales" : "Max"}
             }, 
             {
-                "ChartName": "Avg age by country",
+                "chartName": "Avg age by country",
                 "chartType": "Vertical Bar Chart"
                 "metrics": { "field1": "country", "field2": "age" },
                 "metricsFilter": {"age" : "Avg"} 
