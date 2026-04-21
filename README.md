@@ -1,6 +1,6 @@
 # Chart Generator Microservice 2.0.0
 
-A Flask microservice that analyzes your `.csv` or `.xlsx` files using a local LLM and returns chart suggestions as JSON that runs locally. 
+A Flask microservice that analyzes your `.csv` or `.xlsx` files using a local LLM and returns chart suggestions as a structured JSON. 
 
 ---
 
