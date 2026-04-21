@@ -97,23 +97,15 @@ Structure:
 | Type | Notes |
 |---|---|
 | Tile | Single KPI, one field only |
-| Vertical Bar Chart | List<Str: Float> |
-| Horizontal Bar Chart | List<Str: Float> |
-| Stacked Bar Chart | List<Str: List<Float>> |
-| Line | List<Float : Float> |
-| Pie | List<Float> |
-| Donut | List<Float> |
-| Scatter | List<Float : Float> |
-| Area | List<Float : List<Float>> |
+| Vertical Bar Chart | List[Str: Float] |
+| Horizontal Bar Chart | List[Str: Float] |
+| Stacked Bar Chart | List[Str: List[Float]] |
+| Line | List[Float : Float] |
+| Pie | List[Float] |
+| Donut | List[Float] |
+| Scatter | List[Float : Float] |
+| Area | List[Float : List[Float]] |
 
-#    b) Vertical Bar Chart: List<Str: Float> //May be worth considering remove one of this
-#    c) Horizontal Bar Chart: List<Str: Float> //May be worth considering remove one of this
-#    d) Stacked Bar Chart: List<Str: List<Float>>  
-#    e) Line: List<Float : Float>
-#    f) Pie: List<Float>
-#    g) Donut: List<Float>
-#    h) Scatter: List<Float : Float>
-#    i) Area: List<Float : List<Float>>
 
 **Available filters:** `Max`, `Min`, `Avg`, `Sum`, `Count`
 If there is no filter, asume it is Count. 
