@@ -77,6 +77,7 @@ Value: your_file.csv
 
 **Response**
 Structure: 
+```json
 {"Charts": [
     "chartName": "theChartName", 
     "chartType": "theType", 
@@ -90,7 +91,9 @@ Structure:
     }, 
     ...
 ]}
-//See below to see an small example of a response.
+```
+Note: Area and Stacked Bar Charts have three fields. 
+Please check the example of the end to see an actual example of how it will work on the practice, it covers all the cases.
 
 **Available chart types**
 
