@@ -84,14 +84,15 @@ def prepareInsightsData(df, insights):
                 "metricsFilter": {"sales" : "Max"}
             }, 
             {
-                "chartName": "Avg age by country",
-                "chartType": "Vertical Bar Chart"
-                "metrics": { "field1": "country", "field2": "age" },
+                "chartName": "Avg age by country by sex",
+                "chartType": "Stacked Bar"
+                "metrics": { "field1": "country", "field2": "age", "field3" : "sex" },
                 "metricsFilter": {"age" : "Avg"} 
             }
         ]
     }
     """
+    #toDo: Consider adding instructions of when using which chart. 
     chartsGeneratingPrompt = f"""
     Your task is to think about the 5 usefull charts to visualize from the following insights {insights}
     and return them in a Json format STRICTLY and with NO CHANGE: {jsonFormat}, no extra comments using 
@@ -101,12 +102,12 @@ def prepareInsightsData(df, insights):
     a) Tile: A single KPI, write only a single field in fields. 
     b) Vertical Bar Chart: default
     c) Horizontal Bar Chart: default
-    d) Stacked Bar Chart: default
+    d) Stacked Bar Chart: Three fields as in example
     e) Line, write only two fields in fields to compare
     f) Pie, default
     g) Donut, default
     h) Scatter, write only two fields in fields to compare
-    i) Area, default
+    i) Area, Three fields as in example for Stacked Bar
 
     Filters can be: Max, Min, Avg, Sum. 
 

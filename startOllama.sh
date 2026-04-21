@@ -1,24 +1,8 @@
 #!/bin/bash
 
 ollama serve &
-sleep 5
-echo "Hacking your device"
 sleep 10
 echo "This is a prank"
-echo "Right?"
-echo "Encriptying..."
-echo "Extracting 5f6d2302d1cbf4603a5569620d4e1a22300fb765e311c6f483fbdf0dc60f41c6
-e1be6bfabc59c8c3274a6bc9984265ccddcb7693690fa653c864319fd2e4ff9e
-ffe5e147e5f520062ab7968fd5cf6844862cde05cbcdaef00305bdb154604d9d
-c54496a62dbc903d37697c96c1f012c858c2353bf6510d2dfd1c69dd4dbc2bd4
-c9b21ca02be745ee7ffab679683bbd559568d68414b105c2fcbcdf218976dabf
-34d10bd26dab5369b201ef610b6e8c925924652dc4938706ea648f56515973cd
-4e53220a964f956008c18fd4399ce5599e541f0c41285d9d0b5204ed2f048e50
-b5b3bdf89213a80d36693f1efc155c829db9d33513056b344af3e8605a8b0bff
-d2905844b153452015b0320536a86780c90e4cff5ce061387670f9ba5577f312
-9f7cd32663de1280753ecd773db82b5f17bc0bd75229614a7fd397d92ca7114b"
-sleep 5
-echo "Downloading gemma4:e2b"
 ollama pull gemma4:e2b
 echo "Doomsday device ready"
 echo "Executing doommsday device"

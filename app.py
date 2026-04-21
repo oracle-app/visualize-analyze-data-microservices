@@ -2,8 +2,11 @@ from flask import Flask, request, jsonify
 import pandas as pd
 import io
 from prepareData import prepareData, prepareInsightsData
+from queryData import dataQuerienator3000
 import ollama
 import json
+from json_repair import repair_json
+import gc
 
 app = Flask(__name__)
 client = ollama.Client(host="http://host.docker.internal:11434")
@@ -30,22 +33,33 @@ def parse_file(file) -> pd.DataFrame:
     raise ValueError(f"Non supported filetype: {file.filename}, please provide either .csv or .xlsx")
 
 def jsonSanitizer(raw: str) -> dict:
-    clean = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-    parsed = json.loads(clean)
+    clean = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").removesuffix("```").strip()
+    repaired = repair_json(clean)
+    parsed = json.loads(repaired)
 
     valid_filters = {"Max", "Min", "Avg", "Sum"}
     valid_chart_types = {
         "Tile", "Vertical Bar Chart", "Horizontal Bar Chart",
         "Stacked Bar Chart", "Line", "Pie", "Donut", "Scatter", "Area"
     }
-
+    #Forces name of metrics to be field1, 2 and 3. 
+    for chart in parsed["Charts"]:
+        metrics = chart.get("metrics", {})
+        keys = list(metrics.keys())
+        if keys and "field1" not in metrics:
+            normalized = {}
+            if len(keys) >= 1: normalized["field1"] = metrics[keys[0]]
+            if len(keys) >= 2: normalized["field2"] = metrics[keys[1]]
+            if len(keys) >= 3: normalized["field3"] = metrics[keys[2]]
+            chart["metrics"] = normalized
+    #Attepmts to save work by forcing default values for chart types and empty filters
     for i, chart in enumerate(parsed["Charts"]):
         if chart.get("chartType") not in valid_chart_types:
             chart["chartType"] = "Vertical Bar Chart"
 
-        for field, value in chart.get("metricsFilter", {}).items():
+        for field, value in (chart.get("metricsFilter") or {}).items():
             if value not in valid_filters:
-                chart["metricsFilter"][field] = "Avg"
+                chart["metricsFilter"][field] = "Count"
 
     return parsed
 
@@ -86,14 +100,26 @@ def analyzeData():
     except Exception as e: 
         return jsonify({"error": f"Ollama Failed to answer: {str(e)}"}), 424
 
-    
     #! This is not enough clean, there is a need to test and implement the logic for enforcing the correct name of fields and 
     #! overwriting them if needed. 
     rawJson = response.message.content
     try: 
         parsed = jsonSanitizer(rawJson)
+        print(parsed)
+    
+
     except json.JSONDecodeError: 
         return jsonify({"error" : "Model returned invalid JSON" ,"raw": rawJson}), 500
-    return jsonify(parsed), 200 
+    try: 
+        res = []
+        print(parsed) 
+        for chart in parsed["Charts"]: 
+            res.append(dataQuerienator3000(chart, df))
+    except Exception as e: 
+        return jsonify({"error" : f"Fail to query the data propertly: {str(e)}"}), 500
+    #Finally, we free the memory
+    del df
+    gc.collect()
+    return jsonify({"Charts" : res}), 200 
 if __name__ == "__main__": 
     app.run(host="0.0.0.0", port=8080)  

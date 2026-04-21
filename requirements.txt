@@ -2,3 +2,4 @@ flask
 pandas
 openpyxl
 ollama
+json_repair
