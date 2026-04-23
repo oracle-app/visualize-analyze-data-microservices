@@ -25,7 +25,7 @@ import pandas
 }
 """
 
-def dataQuerienator3000(formatedData: str, df): 
+def dataQuery(formatedData: str, df): 
     map = {"Max": "max", "Min": "min", "Avg" : "mean", "Sum": "sum", "Count": "count"}
     chartType = formatedData["chartType"]
     metrics = formatedData["metrics"]

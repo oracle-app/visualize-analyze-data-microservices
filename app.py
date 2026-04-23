@@ -2,16 +2,45 @@ from flask import Flask, request, jsonify
 import pandas as pd
 import io
 from prepareData import prepareData, prepareInsightsData
-from queryData import dataQuerienator3000
+from queryData import dataQuery
 import ollama
 import json
 from json_repair import repair_json
 import gc
+from pydantic import BaseModel
 
 app = Flask(__name__)
 client = ollama.Client(host="http://host.docker.internal:11434")
+wakeUpPrompt = "La vida es... pero también ..."
+wakeUpCall = client.chat(model="gemma4:e2b", messages=[
+            {
+                "role" : "user", 
+                "content" : wakeUpPrompt,
+            },
+        ])
+print(wakeUpCall)
 #Constraints for file uploading. 
 EXTENSIONS = {"csv", "xlsx"}
+OUTPUT_FORMAT = """
+{
+    "Charts": [
+        {
+            "chartName": "string",
+            "chartType": "one of 9 known values",
+            "metrics": { "field1": "string", "field2": "string" },
+            "metricsFilter": { }
+        }
+    ]
+}
+"""
+class Chart(BaseModel): 
+    chartName: str
+    chartType: str
+    metrics: dict[str, str]
+    metricsFilter: dict[str, str] | None
+
+class Charts(BaseModel): 
+    Charts: list[Chart]
 
 def allowed_file(filename:str) -> bool: 
     return "." in filename and filename.rsplit(".", 1)[1].lower() in EXTENSIONS
@@ -94,14 +123,13 @@ def analyzeData():
         response = client.chat(model="gemma4:e2b", messages=[
             {
                 "role" : "user", 
-                "content" : prompt2
+                "content" : prompt2,
+                "format": Charts.model_json_schema
             }
         ])
     except Exception as e: 
         return jsonify({"error": f"Ollama Failed to answer: {str(e)}"}), 424
 
-    #! This is not enough clean, there is a need to test and implement the logic for enforcing the correct name of fields and 
-    #! overwriting them if needed. 
     rawJson = response.message.content
     try: 
         parsed = jsonSanitizer(rawJson)
@@ -114,7 +142,7 @@ def analyzeData():
         res = []
         print(parsed) 
         for chart in parsed["Charts"]: 
-            res.append(dataQuerienator3000(chart, df))
+            res.append(dataQuery(chart, df))
     except Exception as e: 
         return jsonify({"error" : f"Fail to query the data propertly: {str(e)}"}), 500
     #Finally, we free the memory

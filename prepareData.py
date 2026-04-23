@@ -116,7 +116,7 @@ def prepareInsightsData(df, insights):
     """
     return chartsGeneratingPrompt
 
-#test = pd.read_csv("tested.csv")
+test = pd.read_csv("tests/past_rates.csv")
 #insights = """
 #1. Survival was strongly correlated with social class ($\text{Pclass}$), indicating that passengers in higher-class accommodations had a statistically significant advantage in survival rates.
 #2. The financial standing of the passenger, reflected by the ticket fare ($\text{Fare}$), was a significant predictor of survival, demonstrating that economic status was a critical factor in the outcome of the event.

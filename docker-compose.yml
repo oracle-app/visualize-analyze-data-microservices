@@ -1,14 +1,24 @@
 services:
   ollama-server:
     image: ollama/ollama:latest
-    container_name: ollama-service
     ports:
       - "11434:11434"
     environment:
-      - OLLAMA_KEEP_ALIVE=-1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_HOME=/usr/local/cuda
+      - OLLAMA_MAX_LOADED_MODELS=4
+      - OLLAMA_KEEP_ALIVE=60
     volumes:
       - ollama_storage:/root/.ollama
       - ./startOllama.sh:/startOllama.sh
+    deploy: 
+      resources: 
+        reservations: 
+          devices: 
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    container_name: ollama-service
     entrypoint: ["/bin/bash", "/startOllama.sh"]
     restart: unless-stopped
   web: 
