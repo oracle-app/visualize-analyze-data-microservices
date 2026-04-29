@@ -3,3 +3,6 @@ pandas
 openpyxl
 ollama
 json_repair
+redis
+pika
+uuid

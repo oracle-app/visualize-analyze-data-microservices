@@ -6,7 +6,7 @@ import io
 import sys
 sys.path.insert(0, '.')
 
-from app import app, jsonSanitizer
+from producer import app, jsonSanitizer
 from queryData import dataQuerienator3000
 from prepareData import corrMatrixFilter
 
@@ -524,38 +524,38 @@ class TestParseFile(unittest.TestCase):
     def testValidCsvReturnsDataframe(self):
         with open('tests/tested.csv', 'rb') as f:
             content = f.read()
-        from app import parse_file
+        from producer import parse_file
         df = parse_file(self.FakeFile(content, 'tested.csv'))
         self.assertIsInstance(df, pd.DataFrame)
 
     def testValidCsvHasExpectedColumns(self):
         with open('tests/tested.csv', 'rb') as f:
             content = f.read()
-        from app import parse_file
+        from producer import parse_file
         df = parse_file(self.FakeFile(content, 'tested.csv'))
         self.assertGreater(len(df.columns), 0)
 
     def testValidCsvHasRows(self):
         with open('tests/tested.csv', 'rb') as f:
             content = f.read()
-        from app import parse_file
+        from producer import parse_file
         df = parse_file(self.FakeFile(content, 'tested.csv'))
         self.assertGreater(len(df), 0)
 
     def testMalformedCsvSkipsBadLines(self):
         malformed = b'col1,col2\n1,2\n3,4,5,EXTRA\n6,7\n'
-        from app import parse_file
+        from producer import parse_file
         df = parse_file(self.FakeFile(malformed, 'malformed.csv'))
         self.assertIsInstance(df, pd.DataFrame)
         self.assertEqual(len(df), 2)  # only valid rows
 
     def testUnsupportedExtensionRaisesValueError(self):
-        from app import parse_file
+        from producer import parse_file
         with self.assertRaises(ValueError):
             parse_file(self.FakeFile(b'data', 'file.json'))
 
     def testTxtExtensionRaisesValueError(self):
-        from app import parse_file
+        from producer import parse_file
         with self.assertRaises(ValueError):
             parse_file(self.FakeFile(b'data', 'dummy.txt'))
 

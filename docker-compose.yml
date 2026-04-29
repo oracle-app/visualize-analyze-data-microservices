@@ -20,12 +20,44 @@ services:
               capabilities: [gpu]
     container_name: ollama-service
     entrypoint: ["/bin/bash", "/startOllama.sh"]
-    restart: unless-stopped
-  web: 
+  worker:
+    container_name: worker 
     build: 
       context: .
+    command: python worker.py
+    stop_signal: SIGINT
+    depends_on:
+      - rabbitmq
+      - redis
+      - ollama-server
+  producer: 
+    container_name: producer
+    build: 
+      context: .
+    command: python producer.py
     stop_signal: SIGINT
     ports: 
       - "8080:8080"
+    environment:
+      - CELERY_BROKER_URL=pyamqp://guest@rabbitmq//
+      - REDIS_HOST=redis
+    depends_on:
+      - rabbitmq
+      - redis
+      - ollama-server
+  rabbitmq: 
+    container_name: rabbitmq
+    image: 'rabbitmq:3-management'
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  redis: 
+    container_name: redis
+    image: 'redis:alpine'
+    ports: 
+      - "6379:6379"
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
 volumes:
   ollama_storage:
+  redis-data: 
+    driver: local

@@ -4,9 +4,7 @@ WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-
+ENV PYTHONUNBUFFERED=1
 COPY . .
 
-EXPOSE 8080
-
-CMD ["python", "app.py"]
+CMD ["python", "producer.py"]
