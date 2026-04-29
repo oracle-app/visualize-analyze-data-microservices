@@ -87,8 +87,9 @@ Structure:
 
 ### GET `/results<id>?chart=<chartNumber>&page=<pageNumber?&preview=true`
 The endpoint has 3 different use cases to handle the data. 
-- GET results/mySuperID
-    Serves as a index to know what is the info inside: 
+### GET results/mySuperID
+Example: http://127.0.0.1:8080/results/f57fd992-5b1a-4d51-a1be-2333da45836a
+-Serves as a index to know what is the info inside: 
 **Response**
 Structure: 
 ```json
@@ -113,8 +114,9 @@ Structure:
     "totalCharts": 5
 }
 ```
-- GET results/mySuperID/?chart=0?preview=true
-    Serves as a way to retrieve data on a managable size to render quickly. 
+### GET results/mySuperID/?chart=0?preview=true
+Example: http://127.0.0.1:8080/results/f57fd992-5b1a-4d51-a1be-2333da45836a?chart=2&page=1?&preview=true
+-Serves as a way to retrieve data on a managable size to render quickly. 
 **Response**
 Structure: 
 ```json
@@ -142,21 +144,21 @@ Structure:
     },
     "page": 1,
     "pageSize": 100,
-    "preview": true,
+    "preview": false,
     "status": "COMPLETED",
     "totalPages": 11152,
     "totalPoints": 1115174
 }
 ```
-
-- GET results/mySuperID/?chart=0&page=1
-    Serves as a way to retrieve medium size of data 5k data points at a time, making sure the client can handle them propertly
+### GET results/mySuperID/?chart=0&page=1
+Example: http://127.0.0.1:8080/results/c351b43b-5edf-4e46-9902-c2917478fc1d?chart=2&page=3
+-Serves as a way to retrieve medium size of data 5k data points at a time, making sure the client can handle them propertly
 **Response**
 Structure: 
 ```json
 {
-    "chartIndex": 0,
-    "chartName": "Occupancy vs Revenue",
+    "chartIndex": 2,
+    "chartName": "Revenue vs. Vacancy Analysis",
     "chartType": "Scatter",
     "data": {
         "field1": [
@@ -173,14 +175,14 @@ Structure:
         ]
     },
     "metrics": {
-        "field1": "occupancy",
-        "field2": "revenue"
+        "field1": "revenue",
+        "field2": "vacant_days"
     },
-    "page": 1,
-    "pageSize": 100,
-    "preview": true,
+    "page": 3,
+    "pageSize": 5000,
+    "preview": false,
     "status": "COMPLETED",
-    "totalPages": 11152,
+    "totalPages": 224,
     "totalPoints": 1115174
 }
 ```
@@ -208,7 +210,32 @@ If there is no filter, asume it is Count.
 You will never see them in the response, the queryData.py manages them when quering the data.
 
 ---
-
+**Example of 3 fields data**
+```json
+    {
+    "chartIndex": 2,
+    "chartName": "Survival Rate by Passenger Class",
+    "chartType": "Stacked Bar Chart",
+    "data": {
+        "field1": [
+            "1",
+            "2",
+            "3"
+        ],
+        "field2": {
+            "0": [
+                57,
+                126,
+                438
+            ],
+            "1": [
+                50,
+                60,
+                216
+            ]
+        }
+    },
+```
 ## Project structure
 
 ```
