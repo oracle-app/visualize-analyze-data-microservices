@@ -27,9 +27,13 @@ services:
     command: python worker.py
     stop_signal: SIGINT
     depends_on:
-      - rabbitmq
-      - redis
-      - ollama-server
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: 
+          service_started
+      ollama-server:
+        condition: service_started
   producer: 
     container_name: producer
     build: 
@@ -48,6 +52,11 @@ services:
   rabbitmq: 
     container_name: rabbitmq-1
     image: 'rabbitmq:3-management'
+    healthcheck: 
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     ports:
       - "5672:5672"
       - "15672:15672"
