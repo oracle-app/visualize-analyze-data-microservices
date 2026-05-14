@@ -60,7 +60,7 @@ def dataQuery(formatedData: str, df):
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
-            "fieldNames" : metrics,
+            "metrics" : metrics,
             "data": {
                 "field1": result[category].tolist(),
                 "field2": result[value].tolist()
@@ -72,7 +72,7 @@ def dataQuery(formatedData: str, df):
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
-            "fieldNames" : metrics,
+            "metrics" : metrics,
             "data": {
                 "field1": result[category].tolist(),
                 "field2": result[value].tolist()
@@ -84,7 +84,7 @@ def dataQuery(formatedData: str, df):
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
-            "fieldNames" : metrics,
+            "metrics" : metrics,
             "data": {
                 "field1": result[category].tolist(),
                 "field2": result[value].tolist()
@@ -97,7 +97,7 @@ def dataQuery(formatedData: str, df):
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
-            "fieldNames" : metrics,
+            "metrics" : metrics,
             "data": {
                 "value": agg_func()
             }
@@ -109,7 +109,7 @@ def dataQuery(formatedData: str, df):
             return {
                 "chartName": formatedData["chartName"],
                 "chartType": chartType,
-                "fieldNames" : metrics,
+                "metrics" : metrics,
                 "data": {
                     "field1": result.index.tolist(),
                     "field2": {
@@ -122,7 +122,7 @@ def dataQuery(formatedData: str, df):
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
-            "fieldNames" : metrics,
+            "metrics" : metrics,
             "data": {
                 "field1": result[category].tolist(),
                 "field2": result[value].tolist()
@@ -135,7 +135,7 @@ def dataQuery(formatedData: str, df):
             return {
                 "chartName": formatedData["chartName"],
                 "chartType": chartType,
-                "fieldNames" : metrics,
+                "metrics" : metrics,
                 "data": {
                     "field1": result.index.tolist(),
                     "field2": {
@@ -148,7 +148,7 @@ def dataQuery(formatedData: str, df):
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
-            "fieldNames" : metrics,
+            "metrics" : metrics,
             "data": {
                 "field1": result[category].tolist(),
                 "field2": result[value].tolist()
