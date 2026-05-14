@@ -1,10 +1,11 @@
 #!/bin/bash
 
 ollama serve &
-sleep 10
-echo "This is a prank"
+echo "Waiting for Ollama..."
+until ollama list > /dev/null 2>&1; do
+    sleep 1
+done
+echo "This is not sus"
 ollama pull gemma4:e2b
-echo "Doomsday device ready"
-echo "Executing doommsday device"
 echo "Gemma4:e2b ready to use"
 wait

@@ -17,7 +17,7 @@ def prepareData(df, filename):
     stats = []
     for col in df.columns:
         #print(col)
-        if pd.api.types.is_numeric_dtype(df[col]):
+        if pd.api.types.is_numeric_dtype(df[col]) and not pd.api.types.is_bool_dtype(df[col]):
             mins = df[col].min()
             maxs = df[col].max()
             quantiles = df[col].quantile([0.25, 0.5, 0.75])
@@ -29,8 +29,8 @@ def prepareData(df, filename):
             q2 = "N/A"
             q1 = "N/A"
         stats.append({"nameCol": col, "min" : mins, "max" : maxs,"q3": q3,"q2": q2, "q1":q1})
-    filterCols = [col for col in df.columns if corrMatrixFilter(df[col], df) and not pd.api.types.is_bool_dtype(df[col])]
-    corr_matrix = df[filterCols].corr()
+    filterCols = [col for col in df.columns if corrMatrixFilter(df[col], df)]
+    corr_matrix = df[filterCols].corr(numeric_only=True)
     samples = df.sample(25)
 
     DataFormatPrompt = f""" 
@@ -113,10 +113,14 @@ def prepareInsightsData(df, insights):
 
     Review your response and remeber to strictly follow the format {jsonFormat}
     fields must be exactly the name of the var and filter the way you consider to handle that data. 
+    CRITICAL: The variable names in fields must be EXACTLY as they appear in this list, 
+    character by character, case sensitive: {columnNames}
+    Do not paraphrase, translate, or rename them under any circumstances.
+
+    Do one area chart, please. 
     """
     return chartsGeneratingPrompt
 
-test = pd.read_csv("tests/past_rates.csv")
 #insights = """
 #1. Survival was strongly correlated with social class ($\text{Pclass}$), indicating that passengers in higher-class accommodations had a statistically significant advantage in survival rates.
 #2. The financial standing of the passenger, reflected by the ticket fare ($\text{Fare}$), was a significant predictor of survival, demonstrating that economic status was a critical factor in the outcome of the event.

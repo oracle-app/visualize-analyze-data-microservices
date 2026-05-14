@@ -63,9 +63,9 @@ def jsonSanitizer(raw: str) -> dict:
         keys = list(metrics.keys())
         if keys and "field1" not in metrics:
             normalized = {}
-            if len(keys) >= 1: normalized["field1"] = metrics[keys[0]]
-            if len(keys) >= 2: normalized["field2"] = metrics[keys[1]]
-            if len(keys) >= 3: normalized["field3"] = metrics[keys[2]]
+            if len(keys) >= 1: normalized["field1"] = keys[0]
+            if len(keys) >= 2: normalized["field2"] = keys[1]
+            if len(keys) >= 3: normalized["field3"] = keys[2]
             chart["metrics"] = normalized
     #Attepmts to save work by forcing default values for chart types and empty filters
     for i, chart in enumerate(parsed["Charts"]):

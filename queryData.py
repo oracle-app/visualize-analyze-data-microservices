@@ -1,4 +1,4 @@
-import pandas
+import pandas as pd
 #File with all the necesary functions to translate the proposed data to the necesary info for Koala Plot
 #Requirements per chart: 
 #    a) Tile: Whatever it is. 
@@ -11,7 +11,7 @@ import pandas
 #    h) Scatter: List<Float : Float>
 #    i) Area: List<Float : List<Float>>
 """
-{
+{  
     "Charts": [
         {
             "chartName": "Survival Rate by Class",
@@ -33,6 +33,8 @@ def dataQuery(formatedData: str, df):
     category = metrics.get("field1")
     value = metrics.get("field2")
     agg = map.get(filters.get(value, "Count"), "count")
+    if agg in ["mean", "sum", "max", "min"] and not pd.api.types.is_numeric_dtype(df[value]):
+        agg = "count"
     if not category or not value:
         return {
             "chartName": formatedData.get("chartName", "Unknown"),

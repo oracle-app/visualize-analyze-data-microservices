@@ -127,6 +127,7 @@ def results(taskID):
     else: 
         field2p = []
     response = {
+        **meta,
         "status": "COMPLETED", 
         "chartIndex" : chartIndex, 
         "page" : page, 
@@ -134,7 +135,6 @@ def results(taskID):
         "totalPages" : totalPages,
         "totalPoints" : totalPoints,
         "preview" : preview,
-        **meta,
         "data": {
             "field1": field1,
             "field2": field2p

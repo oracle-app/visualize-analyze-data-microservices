@@ -46,13 +46,13 @@ services:
       - redis
       - ollama-server
   rabbitmq: 
-    container_name: rabbitmq
+    container_name: rabbitmq-1
     image: 'rabbitmq:3-management'
     ports:
       - "5672:5672"
       - "15672:15672"
   redis: 
-    container_name: redis
+    container_name: redis-1
     image: 'redis:alpine'
     ports: 
       - "6379:6379"
