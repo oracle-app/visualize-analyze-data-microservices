@@ -68,7 +68,7 @@ def dataQuery(formatedData: str, df):
         }
 
     elif chartType in type2:  # Line/Scatter
-        result = df[[category, value]].dropna()
+        result = df[[category, value]].dropna().sort_values(by=category)
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
@@ -105,7 +105,7 @@ def dataQuery(formatedData: str, df):
     elif chartType in type4:  # Area
         field3 = metrics.get("field3")
         if field3:
-            result = df.groupby([category, value])[field3].agg(agg).unstack(fill_value=0)
+            result = df.groupby([category, field3])[value].agg(agg).unstack(fill_value=0)
             return {
                 "chartName": formatedData["chartName"],
                 "chartType": chartType,
@@ -113,12 +113,12 @@ def dataQuery(formatedData: str, df):
                 "data": {
                     "field1": result.index.tolist(),
                     "field2": {
-                        str(col): result[col].tolist() for col in result.columns
+                        str(i): result[col].tolist() for i, col in enumerate(result.columns)
                     }
                 }
             }
         # Counter-measure if no field3 
-        result = df.groupby(category)[value].agg(agg).reset_index()
+        result = df.groupby([category, field3])[value].agg(agg).unstack(fill_value=0)
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
@@ -139,7 +139,7 @@ def dataQuery(formatedData: str, df):
                 "data": {
                     "field1": result.index.tolist(),
                     "field2": {
-                        str(col): result[col].tolist() for col in result.columns
+                        str(i): result[col].tolist() for i, col in enumerate(result.columns)
                     }
                 }
             }
