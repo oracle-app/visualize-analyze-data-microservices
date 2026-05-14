@@ -110,6 +110,7 @@ def dataQuery(formatedData: str, df):
                 "chartName": formatedData["chartName"],
                 "chartType": chartType,
                 "metrics" : metrics,
+                "stackNames": result.columns.astype(str).tolist(),
                 "data": {
                     "field1": result.index.tolist(),
                     "field2": {
@@ -118,20 +119,20 @@ def dataQuery(formatedData: str, df):
                 }
             }
         # Counter-measure if no field3 
-        result = df.groupby([category, field3])[value].agg(agg).unstack(fill_value=0)
+        result = df.groupby(category)[value].agg(agg).reset_index()
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
             "metrics" : metrics,
             "data": {
-                "field1": result[category].tolist(),
+                "field1": result[category].astype(str).tolist(),
                 "field2": result[value].tolist()
             }
         }
     elif chartType in type5:  # Stacked Bar
         field3 = metrics.get("field3")
         if field3:
-            result = df.groupby([category, value])[field3].agg(agg).unstack(fill_value=0)
+            result = df.groupby([category, field3])[value].agg(agg).unstack(fill_value=0)
             return {
                 "chartName": formatedData["chartName"],
                 "chartType": chartType,
