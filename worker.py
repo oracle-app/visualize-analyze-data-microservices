@@ -9,8 +9,11 @@ from json_repair import repair_json
 #Actualliry libraries
 from prepareData import prepareData, prepareInsightsData
 from queryData import dataQuery
-#Conns
-client = ollama.Client(host="http://host.docker.internal:11434")
+#Connections
+#This works on windows
+#client = ollama.Client(host="http://host.docker.internal:11434")
+#This works on linux
+client = ollama.Client(host="http://ollama-service:11434")
 r = redis.Redis(host='redis', port=6379, db=0)
 
 #Hot start the LLM
