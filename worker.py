@@ -14,7 +14,7 @@ from queryData import dataQuery
 #client = ollama.Client(host="http://host.docker.internal:11434")
 #This works on linux
 client = ollama.Client(host="http://ollama-service:11434")
-r = redis.Redis(host='redis', port=6379, db=0)
+r = redis.Redis(host='redis', port=6380, db=0)
 
 #Hot start the LLM
 try:

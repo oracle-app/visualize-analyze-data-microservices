@@ -13,7 +13,7 @@ import redis
 import pika
 
 app = Flask(__name__)
-r = redis.Redis(host='redis', port=6379, db=0)
+r = redis.Redis(host='redis', port=6380, db=0)
 #Constraints for file uploading. 
 EXTENSIONS = {"csv", "xlsx"}
 

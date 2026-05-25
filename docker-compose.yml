@@ -58,13 +58,13 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5670:5670"
+      - "15670:15670"
   redis: 
     container_name: redis-1
     image: 'redis:alpine'
     ports: 
-      - "6379:6379"
+      - "6380:6380"
     command: ["redis-server", "--save", "", "--appendonly", "no"]
 volumes:
   ollama_storage:
