@@ -86,6 +86,8 @@ def results(taskID):
 
     chartIndex = request.args.get("chart", type=int)
     page = request.args.get("page", 1, type=int)
+    if page < 1:
+        page = 1
     preview = request.args.get("preview", "false").lower() == "true"
     pageSize = 100 if preview else 5000
 
