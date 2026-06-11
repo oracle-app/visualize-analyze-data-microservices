@@ -32,23 +32,45 @@ def dataQuery(formatedData: str, df):
     filters = formatedData["metricsFilter"] or {}
     category = metrics.get("field1")
     value = metrics.get("field2")
+
+    if chartType == "Tile":
+        value = value or category
+        if not value:
+            return {
+                "chartName": formatedData.get("chartName", "Unknown"),
+                "chartType": chartType,
+                "error": "Missing required fields",
+                "data": {}
+            }
+        if value not in df.columns:
+            return {
+                "chartName": formatedData.get("chartName", "Unknown"),
+                "chartType": chartType,
+                "error": f"Column not found in dataset",
+                "data": {}
+            }
+    else:
+        # Fallback if only one field was provided
+        if category and not value:
+            value = category
+        if not category or not value:
+            return {
+                "chartName": formatedData.get("chartName", "Unknown"),
+                "chartType": chartType,
+                "error": "Missing required fields",
+                "data": {}
+            }
+        if category not in df.columns or value not in df.columns:
+            return {
+                "chartName": formatedData.get("chartName", "Unknown"),
+                "chartType": chartType,
+                "error": f"Column not found in dataset",
+                "data": {}
+            }
+
     agg = map.get(filters.get(value, "Count"), "count")
     if agg in ["mean", "sum", "max", "min"] and not pd.api.types.is_numeric_dtype(df[value]):
         agg = "count"
-    if not category or not value:
-        return {
-            "chartName": formatedData.get("chartName", "Unknown"),
-            "chartType": chartType,
-            "error": "Missing required fields",
-            "data": {}
-        }
-    if category not in df.columns or value not in df.columns:
-        return {
-            "chartName": formatedData.get("chartName", "Unknown"),
-            "chartType": chartType,
-            "error": f"Column not found in dataset",
-            "data": {}
-        }
     type1 = ["Vertical Bar Chart", "Horizontal Bar Chart"]
     type2 = ["Line", "Scatter"]
     type3 = ["Pie","Donut"]
