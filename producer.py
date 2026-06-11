@@ -67,6 +67,8 @@ def analyzeData():
             "message": "File received, validated and queued for processing"}), 202
 
     except Exception as e: 
+        import traceback
+        traceback.print_exc()
         return jsonify({"error" : f"failed to queue task; str{e}"}), 500
 
 @app.route("/results/<taskID>", methods = ["GET"])
