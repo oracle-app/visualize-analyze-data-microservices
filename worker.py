@@ -132,15 +132,18 @@ def callback(ch, method, properties, body):
             data = chartResult["data"]
     
             if data.get("field1"):
-                pipe.rpush(f"result:{taskID}:{i}:field1", *data["field1"])
+                clean_field1 = [str(v) if (isinstance(v, bool) or 'bool' in type(v).__name__) else v for v in data["field1"]]
+                pipe.rpush(f"result:{taskID}:{i}:field1", *clean_field1)
     
             field2 = data.get("field2")
             if isinstance(field2, dict):
                 pipe.set(f"result:{taskID}:{i}:field2", json.dumps(field2))
             elif isinstance(field2, list) and len(field2) > 0:
-                pipe.rpush(f"result:{taskID}:{i}:field2", *field2)
+                clean_field2 = [str(v) if (isinstance(v, bool) or 'bool' in type(v).__name__) else v for v in field2]
+                pipe.rpush(f"result:{taskID}:{i}:field2", *clean_field2)
             if data.get("field3"):
-                pipe.rpush(f"result:{taskID}:{i}:field3", *data["field3"])
+                clean_field3 = [str(v) if (isinstance(v, bool) or 'bool' in type(v).__name__) else v for v in data["field3"]]
+                pipe.rpush(f"result:{taskID}:{i}:field3", *clean_field3)
 
             pipe.set(f"result:{taskID}:{i}:meta", json.dumps({
                 "chartName": chartResult["chartName"],
