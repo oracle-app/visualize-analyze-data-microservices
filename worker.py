@@ -115,6 +115,19 @@ def callback(ch, method, properties, body):
         res = []
         for chart in parsed["Charts"]: 
             print("==========================================Log==================================================")
+            chartType = chart.get("chartType")
+            metrics = chart.get("metrics", {})
+            f1 = metrics.get("field1")
+            f2 = metrics.get("field2")
+            if chartType in ["Scatter", "Line"] and f1 in df.columns and f2 in df.columns:
+                is_f1_bool = pd.api.types.is_bool_dtype(df[f1]) or df[f1].nunique() <= 2
+                is_f2_bool = pd.api.types.is_bool_dtype(df[f2]) or df[f2].nunique() <= 2
+                if is_f1_bool or is_f2_bool:
+                    chart["chartType"] = "Vertical Bar Chart"
+                    if not chart.get("metricsFilter"):
+                        chart["metricsFilter"] = {}
+                    if f2 not in chart["metricsFilter"]:
+                        chart["metricsFilter"][f2] = "Avg" if is_f2_bool else "Count"
             print(chart)
             res.append(dataQuery(chart, df))
         pipe = r.pipeline()

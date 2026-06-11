@@ -111,6 +111,9 @@ def prepareInsightsData(df, insights):
 
     Filters can be: Max, Min, Avg, Sum. 
 
+    CRITICAL CHART SELECTION RULES:
+    - Do NOT use boolean (True/False) or binary columns for Scatter or Line charts. These charts require continuous numerical or high-cardinality variables to be meaningful. If you want to visualize relationships between categorical/boolean columns, use a Vertical/Horizontal Bar Chart or Stacked Bar Chart instead.
+
     Review your response and remeber to strictly follow the format {jsonFormat}
     fields must be exactly the name of the var and filter the way you consider to handle that data. 
     CRITICAL: The variable names in fields must be EXACTLY as they appear in this list, 

@@ -51,10 +51,19 @@ def analyzeData():
         r.setex(f"file:{taskID}", 1800, file.read())
         r.setex(f"status:{taskID}", 1800, "QUEUED")
         r.setex(f"filename:{taskID}", 1800, file.filename)
-        conn = pika.BlockingConnection(pika.ConnectionParameters(
-            host='rabbitmq',
-            heartbeat=0, 
-            blocked_connection_timeout=300))
+        import time
+        conn = None
+        for attempt in range(5):
+            try:
+                conn = pika.BlockingConnection(pika.ConnectionParameters(
+                    host='rabbitmq',
+                    heartbeat=0, 
+                    blocked_connection_timeout=300))
+                break
+            except pika.exceptions.AMQPConnectionError as e:
+                if attempt == 4:
+                    raise e
+                time.sleep(1.5)
         channel = conn.channel()
         channel.basic_publish(exchange='', routing_key='task_queue', body=taskID)
         conn.close()
