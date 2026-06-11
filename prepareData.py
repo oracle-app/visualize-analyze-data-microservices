@@ -31,7 +31,7 @@ def prepareData(df, filename):
         stats.append({"nameCol": col, "min" : mins, "max" : maxs,"q3": q3,"q2": q2, "q1":q1})
     filterCols = [col for col in df.columns if corrMatrixFilter(df[col], df)]
     corr_matrix = df[filterCols].corr(numeric_only=True)
-    samples = df.sample(25)
+    samples = df.sample(min(25, len(df)))
 
     DataFormatPrompt = f""" 
     You are a BUSSINES INTELIGENCE agent. 
