@@ -70,16 +70,25 @@ def jsonSanitizer(raw: str) -> dict:
             if len(keys) >= 2: normalized["field2"] = keys[1]
             if len(keys) >= 3: normalized["field3"] = keys[2]
             chart["metrics"] = normalized
-    #Attepmts to save work by forcing default values for chart types and empty filters
     for i, chart in enumerate(parsed["Charts"]):
         if chart.get("chartType") not in valid_chart_types:
             chart["chartType"] = "Vertical Bar Chart"
 
-        for field, value in (chart.get("metricsFilter") or {}).items():
+        metrics = chart.get("metrics", {})
+        metricsFilter = chart.get("metricsFilter")
+        if isinstance(metricsFilter, str):
+            target_field = metrics.get("field2") or metrics.get("field1")
+            if target_field:
+                chart["metricsFilter"] = {target_field: metricsFilter}
+            else:
+                chart["metricsFilter"] = {}
+        elif not isinstance(metricsFilter, dict):
+            chart["metricsFilter"] = {}
+
+        for field, value in chart["metricsFilter"].items():
             if value not in valid_filters:
                 chart["metricsFilter"][field] = "Count"
 
-    
     return parsed    
 
 def callback(ch, method, properties, body): 
