@@ -80,6 +80,21 @@ def analyzeData():
         traceback.print_exc()
         return jsonify({"error" : f"failed to queue task; str{e}"}), 500
 
+def decode_redis_val(val_bytes):
+    if val_bytes is None:
+        return None
+    val = val_bytes.decode()
+    if val == "True":
+        return True
+    if val == "False":
+        return False
+    try:
+        if '.' in val or 'e' in val.lower():
+            return float(val)
+        return int(val)
+    except ValueError:
+        return val
+
 @app.route("/results/<taskID>", methods = ["GET"])
 def results(taskID): 
     status = r.get(f"status:{taskID}")
@@ -127,7 +142,7 @@ def results(taskID):
     totalPoints = r.llen(f"result:{taskID}:{chartIndex}:field1")
     totalPages = -(-totalPoints // pageSize)
 
-    field1 = [v.decode() for v in r.lrange(f"result:{taskID}:{chartIndex}:field1", start, end)]
+    field1 = [decode_redis_val(v) for v in r.lrange(f"result:{taskID}:{chartIndex}:field1", start, end)]
 
     field2type = r.type(f"result:{taskID}:{chartIndex}:field2").decode()
     if field2type == "string": 
@@ -136,7 +151,7 @@ def results(taskID):
 
     elif field2type == "list":
         field2r = r.lrange(f"result:{taskID}:{chartIndex}:field2", start, end)
-        field2p = [v.decode() for v in field2r]
+        field2p = [decode_redis_val(v) for v in field2r]
     else: 
         field2p = []
     response = {
@@ -155,7 +170,7 @@ def results(taskID):
     }
     field3Raw = r.lrange(f"result:{taskID}:{chartIndex}:field3", start, end)
     if field3Raw:
-        response["data"]["field3"] = [v.decode() for v in field3Raw]
+        response["data"]["field3"] = [decode_redis_val(v) for v in field3Raw]
 
     return jsonify(response), 200
 
