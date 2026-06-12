@@ -78,14 +78,14 @@ def dataQuery(formatedData: str, df):
     type5 = ["Stacked Bar Chart"]
   
     if chartType in type1:  # Vertical/Horizontal Bar
-        result = df.groupby(category)[value].agg(agg).reset_index()
+        result = df.groupby(category)[value].agg(agg)
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
             "metrics" : metrics,
             "data": {
-                "field1": result[category].tolist(),
-                "field2": result[value].tolist()
+                "field1": result.index.tolist(),
+                "field2": result.tolist()
             }
         }
 
@@ -102,14 +102,14 @@ def dataQuery(formatedData: str, df):
         }
 
     elif chartType in type3:  # Pie/Donut
-        result = df.groupby(category)[value].agg(agg).reset_index()
+        result = df.groupby(category)[value].agg(agg)
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
             "metrics" : metrics,
             "data": {
-                "field1": result[category].tolist(),
-                "field2": result[value].tolist()
+                "field1": result.index.tolist(),
+                "field2": result.tolist()
             }
         }
 
@@ -141,14 +141,14 @@ def dataQuery(formatedData: str, df):
                 }
             }
         # Counter-measure if no field3 
-        result = df.groupby(category)[value].agg(agg).reset_index()
+        result = df.groupby(category)[value].agg(agg)
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
             "metrics" : metrics,
             "data": {
-                "field1": result[category].astype(str).tolist(),
-                "field2": result[value].tolist()
+                "field1": result.index.astype(str).tolist(),
+                "field2": result.tolist()
             }
         }
     elif chartType in type5:  # Stacked Bar
@@ -167,14 +167,14 @@ def dataQuery(formatedData: str, df):
                 }
             }
         # Counter-measure if no field3 
-        result = df.groupby(category)[value].agg(agg).reset_index()
+        result = df.groupby(category)[value].agg(agg)
         return {
             "chartName": formatedData["chartName"],
             "chartType": chartType,
             "metrics" : metrics,
             "data": {
-                "field1": result[category].tolist(),
-                "field2": result[value].tolist()
+                "field1": result.index.tolist(),
+                "field2": result.tolist()
             }
         }
 
